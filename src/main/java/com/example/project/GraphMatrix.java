@@ -6,6 +6,9 @@ public class GraphMatrix implements Graph {
 
     private int numVertices;
     private int[][] adjacency;
+    
+    //ArrayList de vertices que se actualizara al hacer el recorrido
+    private ArrayList<Integer> vertices = new ArrayList <Integer>(); 
 
     public GraphMatrix(int numVertices) {
         this.numVertices = numVertices;
@@ -15,6 +18,11 @@ public class GraphMatrix implements Graph {
             for (int j = 0; j < numVertices; j++) {
                 this.adjacency[i][j] = 0;
             }
+        }
+        
+        //Se inicializa el ArrayList con los vertices
+        for (int i = 0; i < numVertices; i++) {
+        	vertices.add(i);
         }
     }
 
@@ -52,6 +60,13 @@ public class GraphMatrix implements Graph {
 
     public ArrayList<Integer> depthFirstSearch(int n, ArrayList<Integer> visited) {
         visited.add(n);
+        //Un ciclo for que buscara el vertice de partida en el ArrayList y se elminara de la lista al ecnontrarlo
+        for(int i = 0; i < this.vertices.size(); i++) {
+        	if(this.vertices.get(i) == n) {
+        		vertices.remove(i);
+        	}
+        }
+        
         for (int i = 0; i < this.numVertices; i++) {
             if (this.adjacency[n][i] == 1 && !visited.contains(i)) {
                 depthFirstSearch(i, visited);
@@ -78,8 +93,15 @@ public class GraphMatrix implements Graph {
     }
 
     public int countConnectedComponents() {
+    	int contador = 0; // Inicializamos con 0 porque se comenzo a contar nigun grafo
 
-        return -1;
+    	while(!vertices.isEmpty()) {
+    		depthFirstSearch(vertices.get(0));
+    		/*/Aumaentamos el contador por cada depthFirstSearch
+    		   comenzando desde la posicion 0 del ArrayList de vertices, actualizable /*/
+    		contador++;
+    	}
+    	return contador;
     }
 
     public static void main(String args[]) {
